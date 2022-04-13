@@ -27,9 +27,9 @@ This part is operated by PostgreSQL for extracting the event log from MIMIC-IV d
 
 The SQL scripts are designed for PostgreSQL. If you are using other SQL database, you can adapt them freely under MIT license.
 
-- [1_preprocessing.sql](./1_preprocessing.sql): preprocessing the `core` and `ed` moudle and preparing for converting them to activities with timestamps
-- [2_to_activity.sql](./2_to_activity.sql): converting the processed tables in `core` and `ed` modules into activity tables
-- [3_to_eventlog.sql](./3_to_eventlog.sql): combining all activity tables into a whole event log
+- [1_preprocessing.sql](./1_extract_eventlog/1_preprocessing.sql): preprocessing the `core` and `ed` moudle and preparing for converting them to activities with timestamps
+- [2_to_activity.sql](./1_extract_eventlog/2_to_activity.sql): converting the processed tables in `core` and `ed` modules into activity tables
+- [3_to_eventlog.sql](./1_extract_eventlog/3_to_eventlog.sql): combining all activity tables into a whole event log
 
 ### [2_to_xes](./2_to_xes/)
 
