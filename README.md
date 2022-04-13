@@ -1,9 +1,9 @@
-# MIMIC-IV-EventLog-Curation
+# MIMIC-IV Event Log Extraction for ED
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Abstract
- In this work, we extract an event log from the MIMIC-IV-ED and MIMIC-IV Core datasets by adopting an existing event log generation methodology. While such relational database shows explicit patterns and relationships of patient data, it cannot clearly display the overall flow of a patient’s journey through the ED, as well as the patient’s activities and their whereabouts after leaving the ED. The curated event log thus enables us to obtain an overview of the patient's end-to-end process in the emergency department. By analysing the current patient process, the efficiency of the emergency department process can be further improved.
+In this work, we extract an event log from the MIMIC-IV-ED and MIMIC-IV Core datasets by adopting an existing event log generation methodology. The data tables in the existing datasets relate to each other based on relational database schema and each table records individual activities of patients along their journey in the emergency department. While the MIMIC-IV dataset captures snapshots of patients journey, the extracted event log aims to capture an end-to-end process of patient journey in the emergency department. This will enable us to analyse the existing patients flow, thereby improving the efficiency of ED process.
 
 ## Prerequisite
 
@@ -34,3 +34,19 @@ The SQL scripts are designed for PostgreSQL. If you are using other SQL database
 ### [2_to_xes](./2_to_xes/)
 
 This part is running on Python environment. Here provides both `.py` and jupyter notebook for converting `.csv` file to `.xes` file.
+
+## About the dataset
+
+### XES event log
+
+XES is a XML-based format event log. In specific, ``eXtensible Event Stream" (XES) is the standard format for logging events that can be supported by the majority of process mining tools. XES has become an official IEEE standard in 2016. XES maintains the general structure of an event log. In particular, an event log is composed of a set of traces, each containing a sequence of events. In addition, XES records trace-level and event-level attributes and their corresponding values in the event log, as illustrated in the following schema.
+
+```xml
+<trace>
+    <!-- Trace attributes -->
+    <event>
+        <!-- Event attributes -->
+    </event>
+    ...
+</trace>
+```
