@@ -5,7 +5,7 @@
 The following SQL scripts are designed for PostgreSQL. If you are using other SQL database, you can adapt them freely under MIT license.
 
 > The schame name used in scripst:
-`CORE` module   --> `"mimic_core"`
+`ed` module   --> `"mimic_ed"`
 event log       --> `"mimic_insights"`
 
 - [1_preprocessing.sql](./1_preprocessing.sql): preprocessing the `ed` moudle and preparing for converting them to activities with timestamps
