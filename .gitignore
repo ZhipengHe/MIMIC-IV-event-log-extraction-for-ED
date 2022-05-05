@@ -1,0 +1,11 @@
+
+.DS_Store
+
+*.xes.gz
+*.xes
+*.csv.gz
+*.csv
+
+.idea/
+.ipynb_checkpoints/
+

@@ -19,8 +19,13 @@ from pm4py.objects.log.exporter.xes import exporter as xes_exporter
 # Please change the path for your CSV file below.
 
 # %%
-csv_file_path = "your_file_path_here.csv"
-log_csv = pd.read_csv(file_path, sep='|')
+csv_file_path = "your_file_path_here.csv.gz" # or "your_file_path_here.csv"
+
+# log_csv = pd.read_csv(csv_file_path, sep=',')
+log_csv = pd.read_csv(csv_file_path, sep=',', compression='gzip', header=0)
+
+# %%
+log_csv.head(20)
 
 # %% [markdown]
 # ### Process the dataframe and convert it to `pm4py` event log structure
@@ -38,23 +43,15 @@ log_csv.rename(columns=
         'timestamps':'timestamp', 
         'subject_id': 'case:subject_id', 
         'hadm_id':'case:hadm_id', 
-        'anchor_year':'case:anchor_year', 
-        'anchor_year_group': 'case:anchor_year_group', 
-        'anchor_age': 'case:anchor_age', 
         'acuity': 'case:acuity', 
-        'chiefcomplaint': 'case:chiefcomplaint',
-        'gender':'case:gender'}, inplace=True)
+        'chiefcomplaint': 'case:chiefcomplaint'}, inplace=True)
 
 # %% [markdown]
 # `pm4py` will select values in the first row of each case for case attributes. Thus, we need fill in rows with empty case attribute
 # 
-# For example: `case:anchor_age`, `case:anchor_year_group`, `case:anchor_year`, `case:gender`, `case:acuity`, `case:chiefcomplaint`
+# For example: `case:acuity`, `case:chiefcomplaint`
 
 # %%
-log_csv['case:anchor_year'] = log_csv.groupby('case:concept:name')['case:anchor_year'].transform(lambda v: v.ffill().bfill())
-log_csv['case:anchor_age'] = log_csv.groupby('case:concept:name')['case:anchor_age'].transform(lambda v: v.ffill().bfill())
-log_csv['case:anchor_year_group'] = log_csv.groupby('case:concept:name')['case:anchor_year_group'].transform(lambda v: v.ffill().bfill())
-log_csv['case:gender'] = log_csv.groupby('case:concept:name')['case:gender'].transform(lambda v: v.ffill().bfill())
 log_csv['case:acuity'] = log_csv.groupby('case:concept:name')['case:acuity'].transform(lambda v: v.ffill().bfill())
 log_csv['case:chiefcomplaint'] = log_csv.groupby('case:concept:name')['case:chiefcomplaint'].transform(lambda v: v.ffill().bfill())
 
@@ -70,8 +67,8 @@ log_csv = dataframe_utils.convert_timestamp_columns_in_df(log_csv)
 log_csv = log_csv.sort_values('timestamp')
 
 # %%
-# check the first 200 rows
-log_csv.head(200)
+# check the first 20 rows
+log_csv.head(20)
 
 # %% [markdown]
 # ### Export event log data to XES file
@@ -88,7 +85,7 @@ event_log = log_converter.apply(log_csv, variant=log_converter.Variants.TO_EVENT
 
 # %%
 xes_file_path = "your_file_path_here.xes"
-xes_exporter.apply(event_log, xes_file_path)
+xes_exporter.apply(event_log, xes_file_path, parameters={xes_exporter.Variants.ETREE.value.Parameters.COMPRESS: True})
 
 # %%
 

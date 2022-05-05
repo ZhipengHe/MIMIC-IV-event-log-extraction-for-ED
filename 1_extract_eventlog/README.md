@@ -6,11 +6,10 @@ The following SQL scripts are designed for PostgreSQL. If you are using other SQ
 
 > The schame name used in scripst:
 `CORE` module   --> `"mimic_core"`
-`ED` module     --> `"mimic_ed"`
 event log       --> `"mimic_insights"`
 
-- [1_preprocessing.sql](./1_preprocessing.sql): preprocessing the `core` and `ed` moudle and preparing for converting them to activities with timestamps
-- [2_to_activity.sql](./2_to_activity.sql): converting the processed tables in `core` and `ed` modules into activity tables
+- [1_preprocessing.sql](./1_preprocessing.sql): preprocessing the `ed` moudle and preparing for converting them to activities with timestamps
+- [2_to_activity.sql](./2_to_activity.sql): converting the processed tables in `ed` module into activity tables
 - [3_to_eventlog.sql](./3_to_eventlog.sql): combining all activity tables into a whole event log
 
 ## ER diagram 
