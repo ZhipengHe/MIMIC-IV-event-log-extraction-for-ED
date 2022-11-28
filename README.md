@@ -48,3 +48,18 @@ XES is a XML-based format event log. In specific, ``eXtensible Event Stream" (XE
     ...
 </trace>
 ```
+
+In our settings, we use standard name labels in XES standard for CaseID, activity, timestamp and case attributes:
+
+- Case ID --> case:concept:name
+- Activity --> concept:name
+- Timestamps --> time:timestamp
+- Case attributes -->  start with `case:`
+
+When importing XES file into [Disco](https://fluxicon.com/disco/), it might notify the warning about the activity classifier. You can ignore the message since we are using standard classifier.
+
+![1](./assets/Disco_warning.png)
+
+## ChangeLog
+
+Check [CHANGELOG.md](./CHANGELOG.md)
