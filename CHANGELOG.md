@@ -20,3 +20,7 @@ This repo is released as a part of [MIMICEL: MIMIC-IV Event Log for Emergency De
 - Add sql scripts for extracting event logs into csv
 - Add python code and jupyter notebook for converting csv into xes formart
 - Add `README.md` and `LICENSE`
+
+
+[1.1.0]: https://github.com/ZhipengHe/MIMIC-IV-event-log-extraction-for-ED/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/ZhipengHe/MIMIC-IV-event-log-extraction-for-ED/commits/v1.0.0
