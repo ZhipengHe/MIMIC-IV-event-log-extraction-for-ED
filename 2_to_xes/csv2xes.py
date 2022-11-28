@@ -19,7 +19,7 @@ from pm4py.objects.log.exporter.xes import exporter as xes_exporter
 # Please change the path for your CSV file below.
 
 # %%
-csv_file_path = "your_file_path_here.csv.gz" # or "your_file_path_here.csv"
+csv_file_path = "mimicel.csv.gz" # or "your_file_path_here.csv"
 
 # log_csv = pd.read_csv(csv_file_path, sep=',')
 log_csv = pd.read_csv(csv_file_path, sep=',', compression='gzip', header=0)
@@ -31,16 +31,21 @@ log_csv.head(20)
 # ### Process the dataframe and convert it to `pm4py` event log structure
 # The default attributes in `pm4py` package:
 # 
-# - Case ID --> `case:concept:name`
-# - Timestamps -->  `timestamps`
+# - Case ID --> case:concept:name
+# - Activity --> concept:name
+# - Timestamps --> time:timestamp
 # - Case attributes -->  start with `case:`
 
 # %%
 # rename some attributes name
 log_csv.rename(columns=
     {
+        # Standardization for CaseID, activity and timestamp
         'stay_id':'case:concept:name',
-        'timestamps':'timestamp', 
+        'activity':'concept:name',
+        'timestamps':'time:timestamp', 
+
+        # Standardization for Case attributes
         'subject_id': 'case:subject_id', 
         'hadm_id':'case:hadm_id', 
         'acuity': 'case:acuity', 
@@ -64,7 +69,7 @@ log_csv['case:chiefcomplaint'] = log_csv.groupby('case:concept:name')['case:chie
 
 # %%
 log_csv = dataframe_utils.convert_timestamp_columns_in_df(log_csv)
-log_csv = log_csv.sort_values('timestamp')
+log_csv = log_csv.sort_values('time:timestamp')
 
 # %%
 # check the first 20 rows
@@ -76,6 +81,15 @@ log_csv.head(20)
 # The default export setting for exporting XES file requires using the default column name of case id `case:concept:name`. But you can use parameters to specify a different name.
 
 # %%
+dataframe = log_csv.head(200000)
+
+event_log_selected = log_converter.apply(dataframe, variant=log_converter.Variants.TO_EVENT_LOG)
+
+# %%
+xes_file_path = "mimicel-test.xes"
+xes_exporter.apply(event_log_selected, xes_file_path, parameters={xes_exporter.Variants.ETREE.value.Parameters.COMPRESS: True})
+
+# %%
 # # You can set parameters for using different column name of case id
 # parameters = {log_converter.Variants.TO_EVENT_LOG.value.Parameters.CASE_ID_KEY: 'case:stay_id'}
 # event_log = log_converter.apply(log_csv, parameters=parameters, variant=log_converter.Variants.TO_EVENT_LOG)
@@ -84,7 +98,7 @@ log_csv.head(20)
 event_log = log_converter.apply(log_csv, variant=log_converter.Variants.TO_EVENT_LOG)
 
 # %%
-xes_file_path = "your_file_path_here.xes"
+xes_file_path = "mimicel.xes" # or "your_file_path_here.xes"
 xes_exporter.apply(event_log, xes_file_path, parameters={xes_exporter.Variants.ETREE.value.Parameters.COMPRESS: True})
 
 # %%
