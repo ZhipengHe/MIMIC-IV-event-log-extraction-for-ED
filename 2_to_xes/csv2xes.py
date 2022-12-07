@@ -49,7 +49,14 @@ log_csv.rename(columns=
         'subject_id': 'case:subject_id', 
         'hadm_id':'case:hadm_id', 
         'acuity': 'case:acuity', 
-        'chiefcomplaint': 'case:chiefcomplaint'}, inplace=True)
+        'chiefcomplaint': 'case:chiefcomplaint'
+        
+        # new case attributes
+        'gender': 'case:gender',
+        'race': 'case:race',
+        'arrival_transport': 'case:arrival_transport',
+        'disposition': 'case:disposition'
+    }, inplace=True)
 
 # %% [markdown]
 # `pm4py` will select values in the first row of each case for case attributes. Thus, we need fill in rows with empty case attribute
@@ -59,6 +66,10 @@ log_csv.rename(columns=
 # %%
 log_csv['case:acuity'] = log_csv.groupby('case:concept:name')['case:acuity'].transform(lambda v: v.ffill().bfill())
 log_csv['case:chiefcomplaint'] = log_csv.groupby('case:concept:name')['case:chiefcomplaint'].transform(lambda v: v.ffill().bfill())
+log_csv['case:gender'] = log_csv.groupby('case:concept:name')['case:gender'].transform(lambda v: v.ffill().bfill())
+log_csv['case:race'] = log_csv.groupby('case:concept:name')['case:race'].transform(lambda v: v.ffill().bfill())
+log_csv['case:arrival_transport'] = log_csv.groupby('case:concept:name')['case:arrival_transport'].transform(lambda v: v.ffill().bfill())
+log_csv['case:disposition'] = log_csv.groupby('case:concept:name')['case:disposition'].transform(lambda v: v.ffill().bfill())
 
 # %% [markdown]
 # `pm4py` has built-in fuctions for transforming the data type of timestamp in the dataframe.

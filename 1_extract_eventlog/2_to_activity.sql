@@ -6,13 +6,13 @@ Split mimic_ed.edstays to Activity
 */
 
 DROP TABLE IF EXISTS "mimic_insights"."ed_edstays_activity_enter";
-SELECT subject_id, stay_id, hadm_id, intime AS timestamps, 'Enter the ED' AS activity
+SELECT subject_id, stay_id, hadm_id, intime AS timestamps, 'Enter the ED' AS activity, gender, race, arrival_transport,  NULL AS disposition
 INTO TABLE "mimic_insights"."ed_edstays_activity_enter"
 FROM "mimic_ed"."edstays"
 ORDER BY stay_id;
 
 DROP TABLE IF EXISTS "mimic_insights"."ed_edstays_activity_discharge";
-SELECT subject_id, stay_id, hadm_id, outtime AS timestamps, 'Discharge from the ED' AS activity
+SELECT subject_id, stay_id, hadm_id, outtime AS timestamps, 'Discharge from the ED' AS activity, NULL AS gender, NULL AS race, NULL AS arrival_transport, disposition
 INTO TABLE "mimic_insights"."ed_edstays_activity_discharge"
 FROM "mimic_ed"."edstays"
 ORDER BY stay_id;

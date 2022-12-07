@@ -2,6 +2,10 @@
 
 This repo is released as a part of [MIMICEL: MIMIC-IV Event Log for Emergency Department](https://physionet.org/content/mimicel-ed/1.0.0/) on PhysioNet. All notable changes to this project will be documented in this file. 
 
+# Unreleased
+
+- Add new attributes (`gender`,`race`, `arrival_transport`, `disposition`) from MIMIC-IV-ED 2.0
+
 ## [1.1.0] - 2022-11-28
 
 ### Added
