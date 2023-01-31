@@ -14,4 +14,4 @@ Extract three id in ed tables
 DROP TABLE IF EXISTS "mimic_insights"."ed_ids";
 SELECT DISTINCT subject_id, hadm_id, stay_id
 INTO TABLE "mimic_insights"."ed_ids"
-FROM "mimic_ed"."edstays";
+FROM "mimiciv_ed"."edstays";
