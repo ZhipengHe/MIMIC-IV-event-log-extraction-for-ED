@@ -29,7 +29,7 @@ FROM "mimic_insights"."ed_edstays_activity_enter"
 UNION ALL
 SELECT dis.*, CAST(dia.seq_num AS text), dia.icd_code, CAST(dia.icd_version AS text), dia.icd_title
 FROM "mimic_insights"."ed_edstays_activity_discharge" dis
-INNER JOIN "mimiciv_ed"."diagnosis" dia
+LEFT JOIN "mimiciv_ed"."diagnosis" dia
 ON dis.stay_id = dia.stay_id
 ORDER BY stay_id, timestamps, seq_num;
 

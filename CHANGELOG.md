@@ -2,6 +2,13 @@
 
 This repo is released as a part of [MIMICEL: MIMIC-IV Event Log for Emergency Department](https://physionet.org/content/mimicel-ed/1.0.0/) on PhysioNet. All notable changes to this project will be documented in this file. 
 
+
+## [unreleased]
+
+### Fixed
+
+- Fix errors in combining `diagnosis` and `Discharge from ED`. Use `LEFT JOIN` instead. Total 1098 cases are influenced
+
 ## [2.0.0] - 2023-01-31
 
 ### Added
@@ -32,6 +39,7 @@ This repo is released as a part of [MIMICEL: MIMIC-IV Event Log for Emergency De
 - Add `README.md` and `LICENSE`
 
 
+[unreleased]: https://github.com/ZhipengHe/MIMIC-IV-event-log-extraction-for-ED/compare/v2.0.0...HEAD
 [2.0.0]: https://github.com/ZhipengHe/MIMIC-IV-event-log-extraction-for-ED/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/ZhipengHe/MIMIC-IV-event-log-extraction-for-ED/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ZhipengHe/MIMIC-IV-event-log-extraction-for-ED/commits/v1.0.0
