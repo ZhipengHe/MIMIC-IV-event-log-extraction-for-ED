@@ -1,6 +1,6 @@
 /*
 Here names the new schema as "mimic_insights" for storing the temp table and event log tables. 
-Also, the schema names for `ed` module is "mimic_ed"
+Also, the schema names for `ed` module is "mimiciv_ed"
 
 If you have different schema names, please change code below.
 */
