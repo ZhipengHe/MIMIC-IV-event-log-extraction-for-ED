@@ -15,5 +15,6 @@ WHERE stay_id IN (
     SELECT stay_id
     FROM "mimiciv_ed"."edstays"
     WHERE intime < outtime
-);
+)
+ORDER BY stay_id, subject_id, hadm_id, timestamps;
 
