@@ -58,6 +58,12 @@ FROM "mimiciv_ed"."vitalsign" v
 INNER JOIN "mimiciv_ed"."edstays" e
     ON e.stay_id = v.stay_id;
 
+-- Delete any activity along with or after discharge 
+DELETE FROM "mimic_insights"."ed_vitalsign_activity" v
+WHERE EXISTS
+    (SELECT 1 FROM "mimic_insights"."ed_edstays_activity_discharge" d
+    WHERE v.stay_id = d.stay_id AND v.timestamps >= d.timestamps);
+
 /*
 Add activity to mimiciv_ed.medrecon
 */
@@ -69,6 +75,12 @@ INTO TABLE "mimic_insights"."ed_medrecon_activity"
 FROM "mimiciv_ed"."medrecon" m
 INNER JOIN "mimiciv_ed"."edstays" e
     ON e.stay_id = m.stay_id;
+
+-- Delete any activity along with or after discharge 
+DELETE FROM "mimic_insights"."ed_medrecon_activity" m
+WHERE EXISTS
+    (SELECT 1 FROM "mimic_insights"."ed_edstays_activity_discharge" d
+    WHERE m.stay_id = d.stay_id AND m.timestamps >= d.timestamps);
 
 /*
 Add activity to mimiciv_ed.pyxis
@@ -82,3 +94,8 @@ FROM "mimiciv_ed"."pyxis" p
 INNER JOIN "mimiciv_ed"."edstays" e
     ON e.stay_id = p.stay_id;
 
+-- Delete any activity along with or after discharge 
+DELETE FROM "mimic_insights"."ed_pyxis_activity" p
+WHERE EXISTS
+    (SELECT 1 FROM "mimic_insights"."ed_edstays_activity_discharge" d
+    WHERE p.stay_id = d.stay_id AND p.timestamps >= d.timestamps);
