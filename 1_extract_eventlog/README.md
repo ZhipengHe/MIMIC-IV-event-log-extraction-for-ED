@@ -11,6 +11,7 @@ event log       --> `"mimic_insights"`
 - [1_preprocessing.sql](./1_preprocessing.sql): preprocessing the `ed` moudle and preparing for converting them to activities with timestamps
 - [2_to_activity.sql](./2_to_activity.sql): converting the processed tables in `ed` module into activity tables
 - [3_to_eventlog.sql](./3_to_eventlog.sql): combining all activity tables into a whole event log
+- [4_clean.sql](./4_clean.sql): Clean invalid cases from event log.
 
 ## ER diagram 
 

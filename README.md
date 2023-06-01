@@ -28,6 +28,7 @@ The SQL scripts are designed for PostgreSQL. If you are using other SQL database
 - [1_preprocessing.sql](./1_extract_eventlog/1_preprocessing.sql): preprocessing the `ed` moudle and preparing for converting them to activities with timestamps
 - [2_to_activity.sql](./1_extract_eventlog/2_to_activity.sql): converting the processed tables in `ed` module into activity tables
 - [3_to_eventlog.sql](./1_extract_eventlog/3_to_eventlog.sql): combining all activity tables into a whole event log
+- [4_clean.sql](./1_extract_eventlog/4_clean.sql): Clean invalid cases from event log.
 
 ### [2_to_xes](./2_to_xes/)
 
