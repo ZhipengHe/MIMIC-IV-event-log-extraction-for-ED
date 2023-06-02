@@ -65,7 +65,7 @@ SELECT fc.stay_id, py.subject_id, fc.hadm_id, py.timestamps, py.activity, NULL A
 FROM "mimic_insights"."ed_ids" fc
 INNER JOIN "mimic_insights"."ed_pyxis_activity" py
     ON fc.stay_id = py.stay_id
-ORDER BY stay_id, subject_id, hadm_id, timestamps;
+ORDER BY stay_id, timestamps;
 
 
 /*
