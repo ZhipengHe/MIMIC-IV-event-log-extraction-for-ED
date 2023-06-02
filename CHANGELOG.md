@@ -11,7 +11,7 @@ This repo is released as a part of [MIMICEL: MIMIC-IV Event Log for Emergency De
 
 ### Fixed
 
-- Fixed a bug when integrating the diagnosis table with the activity `Discharge from the ED`. `LEFT JOIN` is utilised (instead of `INNER JOIN`) to include 1098 cases. This fix is implemented in `2_activity.sql`.
+- Fixed a bug when integrating the diagnosis table with the activity `Discharge from the ED`. `LEFT JOIN` is utilised (instead of `INNER JOIN`), which influences 1098 cases. This fix is implemented in `2_activity.sql`.
 - Fixed a bug to remove events occurred at the same time or after the event `Discharge from the ED` in a single ED stay, due to the fact that discharge should represent the unique end of an ED stay (refer to Step 5 in the Methods section). This fix is implemented in `2_activity.sql`
 
 ## [2.0.0] - 2023-01-31
