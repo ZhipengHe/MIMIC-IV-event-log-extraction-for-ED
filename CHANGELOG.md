@@ -3,6 +3,12 @@
 This repo is released as a part of [MIMICEL: MIMIC-IV Event Log for Emergency Department](https://physionet.org/content/mimicel-ed/) on PhysioNet. All notable changes to this project will be documented in this file. 
 
 
+## [unreleased]
+
+## Fixed
+
+- Fix bugs when convert csv to xes by add `stream_postprocessing` for remove all event attributes with 'NaN'. It casued the errors in importing xes log into ProM (see Issue #4).
+
 ## [2.1.0] - 2023-06-01
 
 ### Changed

@@ -2,6 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+> **Note**
+> If you encounter trouble when importing XES file into ProM, please check [issue #4](https://github.com/ZhipengHe/MIMIC-IV-event-log-extraction-for-ED/issues/4), we have updated `csv2xes.ipynb` and solved the bugs. Feel free to submit any issue to this project!
+
 ## Abstract
 In this work, we extract an event log from the MIMIC-IV-ED datasets by adopting an existing event log generation methodology, and we name this event log MIMICEL. The data tables in the existing datasets relate to each other based on the relational database schema and each table records the individual activities of patients along their journey in the emergency department (ED). While the MIMIC-IV-ED datasets catch snapshots of a patient journey in the ED, the extracted event log MIMICEL aims to capture an end-to-end process of the patient journey. This will enable us to analyse the existing patient flows, thereby improving the efficiency of an ED process.
 ## Prerequisite
