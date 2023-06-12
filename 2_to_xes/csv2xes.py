@@ -32,15 +32,20 @@ log_csv = pd.read_csv(csv_file_path, sep=',', dtype=object)
 # rename some attributes name
 log_csv.rename(columns=
     {
-        # case attributes
-        'stay_id': 'case:concept:name',
+        # Standardization for CaseID, activity and timestamp
+        'stay_id':'case:concept:name',
+        'activity':'concept:name',
+        'timestamps':'time:timestamp', 
+
+        # Standardization for Case attributes
         'subject_id': 'case:subject_id', 
         'hadm_id':'case:hadm_id', 
         'acuity': 'case:acuity', 
         'chiefcomplaint': 'case:chiefcomplaint',
-        # standard activity and timestamp name
-        'activity': 'concept:name',
-        'timestamps': 'time:timestamp'
+        
+        # new case attributes
+        'gender': 'case:gender',
+        'race': 'case:race',
         }, inplace=True)
 
 # %% [markdown]
@@ -51,6 +56,8 @@ log_csv.rename(columns=
 # %%
 log_csv['case:acuity'] = log_csv.groupby('case:concept:name')['case:acuity'].transform(lambda v: v.ffill().bfill())
 log_csv['case:chiefcomplaint'] = log_csv.groupby('case:concept:name')['case:chiefcomplaint'].transform(lambda v: v.ffill().bfill())
+log_csv['case:gender'] = log_csv.groupby('case:concept:name')['case:gender'].transform(lambda v: v.ffill().bfill())
+log_csv['case:race'] = log_csv.groupby('case:concept:name')['case:race'].transform(lambda v: v.ffill().bfill())
 
 # %% [markdown]
 # `pm4py` has built-in fuctions for transforming the data type of timestamp in the dataframe.
@@ -77,4 +84,6 @@ pm4py.write_xes(event_log, xes_file_path, case_id_key='case:concept:name')
 example_csv = log_csv.head(100000)
 example_event_log = pm4py.convert_to_event_log(example_csv, stream_postprocessing=True) 
 pm4py.write_xes(example_event_log, 'mimicel_example.xes', case_id_key='case:concept:name')
+
+
 
