@@ -9,3 +9,8 @@
 .idea/
 .ipynb_checkpoints/
 
+.RData
+.Rhistory
+.Rproj.user/
+*.Rproj
+
