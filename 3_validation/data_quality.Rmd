@@ -1,0 +1,293 @@
+# Data Quality Check
+
+## Import libraries
+
+```{r}
+library(bupaverse)
+library(daqapo)
+```
+
+## Read XES
+
+```{r}
+# event_log <- xesreadR::read_xes("../2_to_xes/mimicel.xes", validate = FALSE)
+```
+
+When import XES file into `bupaR`, it will prompt the following error messages. Hence, we use CSV file to assess the data quality of event log instead.
+
+```         
+Error: cannot allocate vector of size 1.6 Gb
+10. id(list(col_id, row_id), drop = FALSE)
+9. spread.data.frame(., type, value)
+8. spread(., type, value)
+7. select(., -attr_id)
+6. list2(...)
+5. bind_cols(., eventlog)
+4. select(., -n_attributes, -attr_id)
+3. spread(., key, value)
+2. all_attrs %>% unlist() %>% as_data_frame() %>% mutate(type = rep(c("key",
+"value"), length = nrow(.)), attr_id = rep(1:(nrow(.)/2),
+each = 2)) %>% spread(type, value) %>% select(-attr_id) %>%
+bind_cols(eventlog) %>% select(-n_attributes, -attr_id) %>% ...
+1. xesreadR::read_xes("../2_to_xes/mimicel.xes", validate = FALSE)
+```
+
+## Read CSV
+
+Import event log form csv
+
+```{r}
+eventlog_df <- 
+  read.csv('../2_to_xes/mimicel.csv', sep=",", na.strings = c("", " "))
+```
+
+Convert dataframe to event log and activity log , add activity_instance_id, add lifecycle_id
+
+```{r}
+eventlog_df %>%
+  bupaR::convert_timestamps(columns="timestamps", format = ymd_hms) %>%
+  bupaR::mutate(resource_id = NA) %>%
+  bupaR::mutate(lifecycle_id = "complete") %>%
+  bupaR::mutate(activity_instance_id = as.numeric(row.names(.))) %>%
+  bupaR::eventlog(case_id = "stay_id",
+                  activity_id = "activity",
+                  activity_instance_id = "activity_instance_id",
+                  timestamp = "timestamps",
+                  lifecycle_id = "lifecycle_id",
+                  resource_id = "resource_id") -> event_log
+
+# package `daqapo` requires `activitylog` for validating data quality
+event_log %>% 
+  bupaR::to_activitylog() -> activity_log
+```
+
+## Inspect `event_log`
+
+Show identifiers for `event_log`
+
+```{r}
+event_log %>% bupaR::mapping()
+```
+
+
+Show activity, event, case, and trace of `event_log`
+
+```{r}
+event_log %>% bupaR::n_activities()
+event_log %>% bupaR::n_events()
+event_log %>% bupaR::n_cases()
+event_log %>% bupaR::n_traces()
+
+```
+Show unique activities
+
+```{r}
+event_log %>% 
+  bupaR::activities()
+```
+
+Show unique traces
+
+```{r}
+event_log %>% bupaR::traces()
+```
+
+## Data Quality Assessment
+
+The table below summarizes the different data quality assessment tests available in `daqapo`, after which each test will be briefly demonstrated.
+
+| Function name                        | Description                                                                                                                               | Output                                                                             |
+|:-----------------|:--------------------------------|:--------------------|
+| detect_activity_frequency_violations | Function that detects activity frequency anomalies per case                                                                               | Summary in console + Returns activities in cases which are executed too many times |
+| detect_attribute_dependencies        | Function detecting violations of dependencies between attributes (i.e. condition(s) that should hold when (an)other condition(s) hold(s)) | Summary in console + Returns rows with dependency violations                       |
+| detect_missing_values                | Function detecting missing values at different levels of aggregation                                                                      | Summary in console + Returns rows with NAs                                         |
+| detect_multiregistration             | Function detecting the registration of a series of events in a short time period for the same case or by the same resource                | Summary in console + Returns rows with multiregistration on resource or case level |
+| detect_unique_values                 | Function listing all distinct combinations of the given log attributes                                                                    | Summary in console + Returns all unique combinations of values in given columns    |
+| detect_value_range_violations        | Function detecting violations of the range of acceptable values                                                                           | Summary in console + Returns rows with value range infringements                   |
+
+### Detect activity frequency anomalies
+
+```{r}
+activity_log %>% daqapo::detect_activity_frequency_violations("Enter the ED" = 1, "Triage in the ED" = 1)
+```
+
+
+### 1. Detect Missing Values
+
+Overview missing values for each column
+
+```{r}
+activity_log %>%
+  daqapo::detect_missing_values(level_of_aggregation = "overview")
+  
+```
+
+Detect missing values for `subject_id`
+
+```{r}
+activity_log %>% 
+  daqapo::detect_missing_values(level_of_aggregation = "column", 
+                                column = "subject_id")
+
+```
+
+Detect missing values for `gender`
+
+```{r}
+activity_log %>% 
+  bupaR::filter(activity=="Enter the ED") %>%
+  daqapo::detect_missing_values(level_of_aggregation = "column", 
+                                column = "gender")
+
+```
+
+Detect missing values for `race`
+
+```{r}
+activity_log %>% 
+  bupaR::filter(activity=="Enter the ED") %>%
+  daqapo::detect_missing_values(level_of_aggregation = "column", 
+                                column = "race")
+```
+
+Detect missing values for `arrival_transport`
+
+```{r}
+activity_log %>% 
+  bupaR::filter(activity=="Enter the ED") %>%
+  daqapo::detect_missing_values(level_of_aggregation = "column", 
+                                column = "arrival_transport")
+```
+
+Detect missing values for `disposition`
+
+```{r}
+activity_log %>% 
+  bupaR::filter(activity=="Discharge from the ED") %>%
+  daqapo::detect_missing_values(level_of_aggregation = "column", 
+                                column = "disposition")
+```
+
+Detect missing values for `acuity`
+
+```{r}
+activity_log %>% 
+  bupaR::filter(activity=="Triage in the ED") %>%
+  daqapo::detect_missing_values(level_of_aggregation = "column", 
+                                column = "acuity")
+```
+
+### 2. Detect Incomplete Cases
+
+```{r}
+activity_log %>%
+  daqapo::detect_incomplete_cases(activities = c("Enter the ED", "Triage in the ED", "Discharge from the ED"))
+```
+
+### 3. Detect Activity Order Violation
+
+```{r}
+activity_log %>% 
+  bupaR::filter((activity == "Enter the ED") | ((activity == "Discharge from the ED") & (is.na(seq_num) | seq_num == 1))) -> simple_mimicel
+
+  
+```
+
+```{r}
+simple_mimicel %>% 
+  daqapo::detect_activity_order_violations(activity_order = c("Enter the ED", "Discharge from the ED"), timestamp = "complete")
+
+```
+
+### 4. Detect Attributes Dependencies
+
+Detect cases with `disposition == "ADMITTED"` which `hadm_id` is NA
+
+```{r}
+activity_log %>% 
+  bupaR::filter((activity =="Discharge from the ED") & (is.na(seq_num) | seq_num == 1) ) %>%
+  daqapo::detect_attribute_dependencies(antecedent = (disposition == "ADMITTED"),
+                                        consequent = is.na(hadm_id))
+
+```
+
+### 5. Detect_time_anomalies
+
+```{r}
+activity_log %>% 
+  bupaR::filter((activity == "Enter the ED")) %>%
+  bupaR::mutate(enter_time = complete) -> activity_enter
+
+activity_log %>% 
+  bupaR::filter(((activity == "Discharge from the ED") & (is.na(seq_num) | seq_num == 1))) %>%
+  bupaR::mutate(discharge_time = complete) -> activity_discharge
+
+base::merge(x = activity_enter, y = activity_discharge, all.x = TRUE, by = "stay_id") %>%
+  bupaR::mutate(complete = discharge_time) %>%
+  bupaR::mutate(start = enter_time) %>%
+  daqapo::detect_time_anomalies()
+  
+```
+
+### 6. Detect Multiregistration
+
+Detect Multiregistration for activity `Medicine reconciliation`
+
+```{r}
+activity_log %>%
+  bupaR::filter(activity == "Medicine reconciliation") %>%
+  daqapo::detect_multiregistration(level_of_aggregation = "case",
+                                   timestamp = "complete",
+                                   threshold_in_seconds = 61)
+```
+
+Detect Multiregistration for activity `Medicine dispensations`
+
+```{r}
+activity_log %>%
+  bupaR::filter(activity == "Medicine dispensations") %>%
+  daqapo::detect_multiregistration(level_of_aggregation = "case",
+                                   timestamp = "complete",
+                                   threshold_in_seconds = 61)
+```
+
+Detect Multiregistration for activity `Vital sign check`
+
+```{r}
+activity_log %>%
+  filter(activity == "Vital sign check") %>%
+  daqapo::detect_multiregistration(level_of_aggregation = "case",
+                                   timestamp = "complete",
+                                   threshold_in_seconds = 61)
+```
+
+Detect Multiregistration for activity `Discharge from the ED`
+
+```{r}
+activity_log %>%
+  filter(activity == "Discharge from the ED") %>%
+  daqapo::detect_multiregistration(level_of_aggregation = "case",
+                                   timestamp = "complete",
+                                   threshold_in_seconds = 1)
+```
+
+### 7. Detect Value Range Violations
+
+Detect invalid value range of *acuity*
+
+```{r}
+activity_log %>%
+  bupaR::filter(activity == "Triage in the ED") %>%
+  daqapo::detect_value_range_violations(acuity = domain_numeric(from=1, to=5))
+```
+
+Detect invalid value range of *pain*
+
+```{r}
+activity_log %>%
+  bupaR::filter(activity == "Triage in the ED" | activity == "Vital sign check") %>%
+  bupaR::mutate(pain_num = as.numeric(pain)) %>%
+  daqapo::detect_value_range_violations(pain_num = domain_numeric(from=0, to=10))
+
+
+```
