@@ -22,35 +22,46 @@ In this work, we extract an event log from the MIMIC-IV-ED datasets by adopting 
 
 ## Usage
 
-### [1_extarct_eventlog](./1_extract_eventlog/)
+### 1. Data Extraction: [1_extarct_eventlog](./1_extract_eventlog/)
 
-This part is operated by PostgreSQL for extracting the event log from MIMIC-IV database, involving module `ed`.
+This folder contains PostgreSQL scripts for extracting the event log from the MIMIC-IV-ED database and exporting them as CSV files. It includes three SQL scripts:
 
 The SQL scripts are designed for PostgreSQL. If you are using other SQL database, you can adapt them freely under MIT license.
 
 - [1_preprocessing.sql](./1_extract_eventlog/1_preprocessing.sql): preprocessing the `ed` moudle and preparing for converting them to activities with timestamps
 - [2_to_activity.sql](./1_extract_eventlog/2_to_activity.sql): converting the processed tables in `ed` module into activity tables
 - [3_to_eventlog.sql](./1_extract_eventlog/3_to_eventlog.sql): combining all activity tables into a whole event log
-- [4_clean.sql](./1_extract_eventlog/4_clean.sql): Clean invalid cases from event log.
 
-### [2_to_xes](./2_to_xes/)
+### 2. XES Log Conversion: [2_to_xes](./2_to_xes/)
 
 This part is running on Python environment. Here provides both `.py` and jupyter notebook for converting `.csv` file to `.xes` file.
 
-### [3_validation](./3_validation/)
+### 3. Technical Validation: [3_validation](./3_validation/)
 
 This part cooperates R package `DaQAPO` for validating the data quality of event log.
 
 - [data_quality.Rmd](./3_validation/data_quality.Rmd): R markdown file for detecting event log data quality issues, such as missing values, incomplete cases, violations of activity order, etc.
 - [data_quality.html](./3_validation/data_quality.html) & [data_quality_revised.html](./3_validation/data_quality_revised.html): the output of `data_quality.Rmd` file. Revised version is the updated version after removing the long long case lists in the output of some evaluation functions. Improved readability.
 
-### [4_analysis](./4_analysis/)
+### 4. Post-processing: [4_post_processing](./4_post_processing/)
+
+A post-processing step was performed to clean the event log further. This step resulted in a cleaned version of the MIMICEL log, facilitated by:
+
+- [4_clean.sql](./1_extract_eventlog/4_clean.sql):  cleaning invalid cases from event log where the intime is not earlier than the outtime. 
+
+### 5. Log Preparation: [5_analysis/log_preparation](./5_analysis/log_preparation/)
 
 Based on the extracted event log, we can perform further analysis by generating insights and filtering the event log using SQL scripts. Then, we can use the filtered event log for further analysis in process mining tools and python environment.
 
 - [5_insights.sql](./4_analysis/5_insights.sql): SQL script for generating insights from the event log, such as the length of stay, static attributes, etc.
 - [6_filter.sql](./4_analysis/6_filter.sql): SQL script for filtering the event log based on the insights generated from the previous step, removing events that happen before or have the same timestamp as "Enter the ED".
-- [acuity_LoS.ipynb](./4_analysis/acuity_LoS.ipynb) & [crowdedness.ipynb](./4_analysis/crowdedness.ipynb): Jupyter notebook for further analysis on the filtered event log, such as the relationship between acuity and length of stay, the relationship between crowdedness and length of stay, etc.
+
+### 6. Log Analysis: [5_analysis/log_analysis](./5_analysis/log_analysis/)
+
+The cleaned event log was used for further analysis with process mining tools and the Python environment. This analysis focused on:
+
+- [acuity_cohorts.sql](./4_analysis/log_analysis/acuity_cohorts.sql) & [throughput.sql](./4_analysis/log_analysis/throughput.sql): SQL scripts for extracting sublogs by acuity levels and discharge types for further analyses.
+- [acuity_LoS.ipynb](./4_analysis/log_analysis/acuity_LoS.ipynb) & [crowdedness.ipynb](./4_analysis/log_analysis/crowdedness.ipynb): Jupyter notebook for further analysis on the filtered event log, such as the relationship between acuity and length of stay, the relationship between crowdedness and length of stay, etc.
 
 
 ## About the dataset

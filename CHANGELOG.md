@@ -5,6 +5,14 @@ This repo is released as a part of [MIMICEL: MIMIC-IV Event Log for Emergency De
 
 ## [unreleased]
 
+## Added
+
+- Add Technical Validation part for validating the data quality of event log in `3_validation` folder.
+- Add Analysis part to generate insights and filter the event log in `5_analysis` folder.
+
+## Changed
+
+- Refactor the `4_clean.sql` in the `4_post_processing` folder to align with the research protocol. 
 ## Fixed
 
 - Fix bugs when convert csv to xes by add `stream_postprocessing` for remove all event attributes with 'NaN'. It casued the errors in importing xes log into ProM (see Issue #4).
