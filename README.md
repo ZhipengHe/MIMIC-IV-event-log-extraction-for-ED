@@ -37,6 +37,22 @@ The SQL scripts are designed for PostgreSQL. If you are using other SQL database
 
 This part is running on Python environment. Here provides both `.py` and jupyter notebook for converting `.csv` file to `.xes` file.
 
+### [3_validation](./3_validation/)
+
+This part cooperates R package `DaQAPO` for validating the data quality of event log.
+
+- [data_quality.Rmd](./3_validation/data_quality.Rmd): R markdown file for detecting event log data quality issues, such as missing values, incomplete cases, violations of activity order, etc.
+- [data_quality.html](./3_validation/data_quality.html) & [data_quality_revised.html](./3_validation/data_quality_revised.html): the output of `data_quality.Rmd` file. Revised version is the updated version after removing the long long case lists in the output of some evaluation functions. Improved readability.
+
+### [4_analysis](./4_analysis/)
+
+Based on the extracted event log, we can perform further analysis by generating insights and filtering the event log using SQL scripts. Then, we can use the filtered event log for further analysis in process mining tools and python environment.
+
+- [5_insights.sql](./4_analysis/5_insights.sql): SQL script for generating insights from the event log, such as the length of stay, static attributes, etc.
+- [6_filter.sql](./4_analysis/6_filter.sql): SQL script for filtering the event log based on the insights generated from the previous step, removing events that happen before or have the same timestamp as "Enter the ED".
+- [acuity_LoS.ipynb](./4_analysis/acuity_LoS.ipynb) & [crowdedness.ipynb](./4_analysis/crowdedness.ipynb): Jupyter notebook for further analysis on the filtered event log, such as the relationship between acuity and length of stay, the relationship between crowdedness and length of stay, etc.
+
+
 ## About the dataset
 
 ### XES event log
